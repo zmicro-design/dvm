@@ -13,7 +13,8 @@ export PLUGIN_DVM_DENO_BIN=$PLUGIN_DVM_DENO_HOME/bin
 export PLUGIN_DVM_DENO_PATH=$HOME/.deno
 export PLUGIN_DVM_DENO_DOWNLOAD_TMP=/tmp/deno.zip
 export PLUGIN_DVM_DENO_SOURCE_OFFICIAL=https://github.com/denoland/deno/releases/download
-export PLUGIN_DVM_DENO_SOURCE_CHINA=https://mirrors.ustc.edu.cn/deno-static/dist
+# @TODO
+export PLUGIN_DVM_DENO_SOURCE_CHINA=https://github.com/denoland/deno/releases/download
 export PLUGIN_DVM_DENO_REPO=https://github.com/denoland/deno
 
 if [ ! -d "$PLUGIN_DVM_VERSIONS" ]; then
