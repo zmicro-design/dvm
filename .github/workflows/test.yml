@@ -64,8 +64,8 @@ jobs:
       - name: Install DVM
         run: ./install
 
-      - name: Install Deno
-        run: zmicro dvm install
+      - name: Install Deno (Stable/LTS)
+        run: zmicro dvm lts
 
       - name: Show Deno Version
         run: |
