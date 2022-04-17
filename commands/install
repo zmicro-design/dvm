@@ -26,7 +26,7 @@ core() {
   if [ -f "$HOME/.zshrc" ]; then
     log::success "load deno and cargo by reloading env with $(color::success "source $HOME/.zshrc")"
   elif [ -f "$HOME/.bashrc" ]; then
-    log::success "load deno and cargo by reloading env with $(color::success "source $HOME/.bashrc")`"
+    log::success "load deno and cargo by reloading env with $(color::success "source $HOME/.bashrc")"
   else
     log::success "restart your shell to load deno and cargo"
   fi
