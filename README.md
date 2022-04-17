@@ -27,14 +27,14 @@ wget -qO- https://raw.githubusercontent.com/zmicro-design/plugin-dvm/master/inst
 ```markdown
 Deno Version Manager (v1.0.0)
 
-Deno Version Manager is a tool for managing multiple Go versions.
+Deno Version Manager is a tool for managing multiple Deno versions.
 
 Usage:
   zdvm install <version>   - Install Deno version
   zdvm use <version>       - Use Deno version
   zdvm remove <version>    - Remove Deno version
-  zdvm ls                  - List the Go versions installed
-  zdvm ls-remote           - List all Go versions from remote
+  zdvm ls                  - List the Deno versions installed
+  zdvm ls-remote           - List all Deno versions from remote
   zdvm current             - Show current Deno version
   zdvm exec                - Enter new shell with deno version for tmp
   zdvm help                - Show help

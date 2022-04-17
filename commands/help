@@ -6,7 +6,7 @@ name() {
 }
 
 description() {
-  echo "Deno Version Manager is a tool for managing multiple Go versions."
+  echo "Deno Version Manager is a tool for managing multiple Deno versions."
 }
 
 usage() {
@@ -14,8 +14,8 @@ usage() {
   echo "  zdvm install <version>   - Install Deno version"
   echo "  zdvm use <version>       - Use Deno version"
   echo "  zdvm remove <version>    - Remove Deno version"
-  echo "  zdvm ls                  - List the Go versions installed"
-  echo "  zdvm ls-remote           - List all Go versions from remote"
+  echo "  zdvm ls                  - List the Deno versions installed"
+  echo "  zdvm ls-remote           - List all Deno versions from remote"
   echo "  zdvm current             - Show current Deno version"
   echo "  zdvm exec                - Enter new shell with deno version for tmp"
   echo "  zdvm help                - Show help"
