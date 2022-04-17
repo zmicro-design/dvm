@@ -21,7 +21,7 @@ jobs:
       - name: Notification Feishu
         uses: whatwewant/action-robot-feishu@v0.0.13
         with:
-          url: ${{ secrets.DOCKER_VERSION_FEISHU_BOT_WEBHOOK_URL }}
+          url: ${{ secrets.WORKFLOW_FEISHU_BOT_WEBHOOK_URL }}
           title: '✅ Docker 发布：${{ github.repository }}'
           text: |
             分支: ${{ github.ref }}
@@ -37,7 +37,7 @@ jobs:
       - name: Notification Feishu
         uses: whatwewant/action-robot-feishu@v0.0.13
         with:
-          url: ${{ secrets.DOCKER_VERSION_FEISHU_BOT_WEBHOOK_URL }}
+          url: ${{ secrets.WORKFLOW_FEISHU_BOT_WEBHOOK_URL }}
           title: '❌ Docker 发布：${{ github.repository }}'
           text: |
             分支: ${{ github.ref }}
@@ -68,4 +68,6 @@ jobs:
         run: zmicro dvm install
 
       - name: Show Deno Version
-        run: deno --version
+        run: |
+          export PATH=$(zmicro dvm bin):$PATH
+          deno --version
