@@ -25,7 +25,7 @@ wget -qO- https://raw.githubusercontent.com/zmicro-design/plugin-dvm/master/inst
 ## Usage
 
 ```markdown
-Deno Version Manager (v1.0.4)
+Deno Version Manager (v1.0.0)
 
 Deno Version Manager is a tool for managing multiple Go versions.
 
@@ -40,9 +40,9 @@ Usage:
   zdvm help                - Show help
 
 Example:
-  zdvm install v16.14.2
-  zdvm use v16.14.2
-  zdvm remove v16.14.2
+  zdvm install v1.20.6
+  zdvm use v1.20.6
+  zdvm remove v1.20.6
   zdvm ls
   zdvm ls-remote
   zdvm current
