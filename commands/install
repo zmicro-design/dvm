@@ -1,0 +1,39 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zdvm install [version]"
+  echo ""
+  echo "Options:"
+  echo "  version    - Install Deno version, default: $PLUGIN_DVM_DENO_DEFAULT_VERSION"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  local version=$1
+  if [ -z "$version" ]; then
+    version=$PLUGIN_DVM_DENO_DEFAULT_VERSION
+  fi
+
+  log::info "installing $version"
+  dvm::install $version
+  log::success "install ${version} success"
+
+  if [ -f "$HOME/.zshrc" ]; then
+    log::success "load deno and cargo by reloading env with `$(color::success "source $HOME/.zshrc")`"
+  elif [ -f "$HOME/.bashrc" ]; then
+    log::success "load deno and cargo by reloading env with `$(color::success "source $HOME/.bashrc")`"
+  else
+    log::success "restart your shell to load deno and cargo"
+  fi
+}
+
+run() {
+  core $@
+}
+
+run $@

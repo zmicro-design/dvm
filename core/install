@@ -1,0 +1,137 @@
+#!/bin/bash
+
+# dvm::install install deno version
+dvm::install() {
+  vm::ensure
+  
+  # 1. get version (vm::version_parse only use in install)
+  local version=$(vm::version_parse $1)
+  # 2. get download url
+  local url=$(dvm::internal_install_get_download_url $version)
+
+  # 3. download
+  dvm::internal_install_download $version $url
+  # 4. apply local
+  dvm::internal_install_apply_local $version
+
+  # if no current, set current
+  if [ "$(dvm::current)" == "" ]; then
+    dvm::use $version
+  else
+    # apply env
+    dvm::env
+  fi
+}
+
+# dvm::internal_install_get_download_url get download url
+dvm::internal_install_get_download_url() {
+  local version=$1
+  local os=$(vm::os)
+  local arch=$(vm::arch)
+
+  # linux
+  # https://github.com/denoland/deno/releases/download/v1.20.6/deno-x86_64-unknown-linux-gnu.zip
+  # mac
+  # https://github.com/denoland/deno/releases/download/v1.20.6/deno-x86_64-apple-darwin.zip
+  # https://github.com/denoland/deno/releases/download/v1.20.6/deno-aarch64-apple-darwin.zip
+  #
+  local filename=deno-${arch}-${os}.zip
+  local tar_gz_url=${PLUGIN_DVM_DENO_SOURCE_OFFICIAL}/v${version}/$filename
+  if [ "$(net::is_google_visitable)" = "false" ]; then
+    tar_gz_url=${PLUGIN_DVM_DENO_SOURCE_CHINA}/v${version}/$filename
+  fi
+
+  # force cn mirror
+  if [ -n "${FORCE_CN}" ]; then
+    tar_gz_url=${PLUGIN_DVM_DENO_SOURCE_CHINA}/v${version}/$filename
+  fi
+
+  # custom source
+  if [ -n "${GO_SOURCE}" ]; then
+    tar_gz_url=${GO_SOURCE}/v${version}/$filename
+  fi
+
+  echo $tar_gz_url
+}
+
+dvm::internal_install_download() {
+  local version=$1
+  local tar_gz_url=$2
+  if [ -z "$version" ]; then
+    log::error "[dvm::internal_install_download] version is required"
+    exit 1
+  fi
+
+  if [ -z "$tar_gz_url" ]; then
+    log::error "[dvm::internal_install_download] tar_gz_url is required"
+    exit 1
+  fi
+
+  # 302 redirect
+  echo "Downloading $tar_gz_url"
+  curl -I $tar_gz_url 2>/dev/null | head -n 1 | grep "302" >> /dev/null 2>&1
+  if [ "$?" = "0" ]; then
+    local location=$(curl -I $tar_gz_url 2>/dev/null | grep location | awk '{print $2}')
+
+    # fix location
+    # stackoverflow: https://stackoverflow.com/questions/70660633/curl-3-url-using-bad-illegal-format-or-missing-url-in-bash-windows
+    location=$(echo $location | sed 's/\r//g')
+
+    # 404
+    curl -I $location 2>/dev/null | head -n 1 | grep "404" >> /dev/null 2>&1
+    if [ "$?" = "0" ]; then
+      log::error "[dvm::install] invalid version: v$version (1)"
+      log::error "[dvm::install] see more version at $PLUGIN_DVM_DENO_SOURCE_OFFICIAL"
+      exit 1
+    fi
+  else
+    # 404
+    curl -I $tar_gz_url 2>/dev/null | head -n 1 | grep "404" >> /dev/null 2>&1
+    if [ "$?" = "0" ]; then
+      log::error "[dvm::install] invalid version: v$version (2)"
+      log::error "[dvm::install] see more version at $PLUGIN_DVM_DENO_SOURCE_OFFICIAL"
+      exit 1
+    fi
+  fi
+
+  # download
+  wget -c $tar_gz_url -O $PLUGIN_DVM_DENO_DOWNLOAD_TMP
+}
+
+dvm::internal_install_apply_local() {
+  local os=$(vm::os)
+  local arch=$(vm::arch)
+
+  local version_no_v=$1
+  if [ -z "$version_no_v" ]; then
+    log::error "[dvm::internal_install_apply_local] version is required"
+    exit 1
+  fi
+
+  # add prefix v*
+  local version=$(vm::version_ensure_prefix_v $version_no_v)
+
+  # clean old
+  if [ -d "$PLUGIN_DVM_VERSIONS/$version" ]; then
+    sudo rm -rf $PLUGIN_DVM_VERSIONS/$version
+  fi
+  # create version
+  sudo mkdir -p $PLUGIN_DVM_VERSIONS/$version/bin
+  # decompress
+  which unzip >> /dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    pm install -y unzip
+  fi
+
+  cd $PLUGIN_DVM_VERSIONS/$version/bin
+  sudo unzip $PLUGIN_DVM_DENO_DOWNLOAD_TMP
+  # clean
+  sudo rm -f $PLUGIN_DVM_DENO_DOWNLOAD_TMP
+}
+
+export -f dvm::install
+
+# install internal processes
+export -f dvm::internal_install_get_download_url
+export -f dvm::internal_install_download
+export -f dvm::internal_install_apply_local

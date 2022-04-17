@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# dvm::current gets the current version of Go
+dvm::current() {
+  if [ ! -f "${PLUGIN_DVM_VERSION_CURRENT}" ]; then
+    echo ""
+    return
+  fi
+
+  echo $(cat $PLUGIN_DVM_VERSION_CURRENT)
+}
+
+export -f dvm::current

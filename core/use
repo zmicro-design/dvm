@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# dvm::use change the current version of go
+dvm::use() {
+  local version=$1
+  if [ -z "$version" ]; then
+    log::error "[dvm::use] version is required"
+    exit 1
+  fi
+
+  # smart detect
+  version=$(vm::version_ensure_prefix_v $version)
+
+  if [ ! -d "$PLUGIN_DVM_VERSIONS/$version" ]; then
+    # log::error "[dvm::use] version $version not found"
+    # exit 1
+    dvm::install $version
+    dvm::use $version
+    return
+  fi
+
+  # @TODO force sudo
+  sudo ls >> /dev/null 2>&1
+
+  if [ -d $PLUGIN_DVM_DENO_HOME ]; then
+    # if not a link
+    file $PLUGIN_DVM_DENO_HOME | grep symbolic >> /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+      sudo rm -rf $PLUGIN_DVM_DENO_HOME
+    else
+      sudo rm -f $PLUGIN_DVM_DENO_HOME
+    fi
+  fi
+  
+  sudo ln -sf $PLUGIN_DVM_VERSIONS/$version $PLUGIN_DVM_DENO_HOME
+  echo $version > $PLUGIN_DVM_VERSION_CURRENT
+
+  # apply env
+  dvm::env
+}
+
+export -f dvm::use

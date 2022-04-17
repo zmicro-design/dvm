@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dvm::list() {
+  ls $PLUGIN_DVM_VERSIONS
+}
+
+export -f dvm::list

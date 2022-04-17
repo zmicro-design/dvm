@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# dvm::remove remove the deno version
+# if the version is current, it will be unset
+dvm::remove() {
+  local version=$1
+  if [ -z "$version" ]; then
+    log::error "[dvm::use] version is required"
+    exit 1
+  fi
+
+  # smart detect
+  version=$(vm::version_ensure_prefix_v $version)
+
+  if [ ! -d "$PLUGIN_DVM_VERSIONS/$version" ]; then
+    log::error "[dvm::use] version $version not found"
+    exit 1
+  fi
+
+  sudo rm -rf $PLUGIN_DVM_VERSIONS/$version
+
+  if [ "$(dvm::current)" == "$version" ]; then
+    local new_version=$(dvm::list | head -n 1)
+    if [ -n "$new_version" ]; then
+      dvm::use $new_version
+    else
+      echo "" > $PLUGIN_DVM_VERSION_CURRENT
+    fi
+  fi
+}
+
+export -f dvm::remove

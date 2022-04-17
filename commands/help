@@ -1,0 +1,48 @@
+#!/bin/bash
+
+name() {
+  local version=$(plugin::get_version $PLUGIN_DVM_NAME)
+  echo "Deno Version Manager ($(color::success $version))"
+}
+
+description() {
+  echo "Deno Version Manager is a tool for managing multiple Go versions."
+}
+
+usage() {
+  echo "Usage:"
+  echo "  zdvm install <version>   - Install Deno version"
+  echo "  zdvm use <version>       - Use Deno version"
+  echo "  zdvm remove <version>    - Remove Deno version"
+  echo "  zdvm ls                  - List the Go versions installed"
+  echo "  zdvm ls-remote           - List all Go versions from remote"
+  echo "  zdvm current             - Show current Deno version"
+  echo "  zdvm exec                - Enter new shell with deno version for tmp"
+  echo "  zdvm help                - Show help"
+}
+
+example() {
+  echo "Example:"
+  echo "  zdvm install $PLUGIN_DVM_DENO_DEFAULT_VERSION"
+  echo "  zdvm use $PLUGIN_DVM_DENO_DEFAULT_VERSION"
+  echo "  zdvm remove $PLUGIN_DVM_DENO_DEFAULT_VERSION"
+  echo "  zdvm ls"
+  echo "  zdvm ls-remote"
+  echo "  zdvm current"
+}
+
+core() {
+  name
+  echo ""
+  description
+  echo ""
+  usage
+  echo ""
+  example
+}
+
+run() {
+  core $@
+}
+
+run $@

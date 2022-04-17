@@ -1,0 +1,11 @@
+#!/bin/bash
+
+dvm::list_remote() {
+  local versions=$(git ls-remote -t $PLUGIN_DVM_DENO_REPO | awk -F/ '{ print $NF }' |  awk '!/\^\{\}$/' | awk '/^v/')
+  for version in ${versions[@]}; do
+    echo $version
+  done
+}
+
+
+export -f dvm::list_remote

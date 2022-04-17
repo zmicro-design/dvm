@@ -1,0 +1,44 @@
+#!/bin/bash
+
+load inquirer
+
+help() {
+  echo "Usage:"
+  echo "  zdvm remove"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  local version=$1
+
+  if [ -z "$version" ]; then
+    local availables=($(dvm::list))
+    inquirer::select "Select ?" availables version
+  fi
+
+  if [ "$(dvm::current)" = "$version" ]; then
+    local yesno=(No yes)
+    inquirer::select "Select ?" yesno confirm
+    if [ "$confirm" = "No" ]; then
+      exit 0
+    fi
+  fi
+
+  dvm::remove $version
+
+  log::success "remove ${version} success"
+
+  if [ -n "$(dvm::current)" ]; then
+    echo "current: $(dvm::current)"
+  fi
+}
+
+run() {
+  core $@
+}
+
+run $@
