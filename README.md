@@ -1,7 +1,7 @@
 # DVM - Deno Version Manager Plugin for [ZMicro](https://github.com/zcorky/zmicro)
 
 [![Release](https://img.shields.io/github/tag/zmicro-design/plugin-dvm.svg?label=Release)](https://github.com/zmicro-design/plugin-dvm/tags)
-[![Build Status](https://github.com/zmicro-design/plugin-dvm/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/zmicro-design/plugin-dvm/actions/workflows/ci.yml)
+[![Build Status](https://github.com/zmicro-design/plugin-dvm/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/zmicro-design/plugin-dvm/actions/workflows/test.yml)
 [![GitHub issues](https://img.shields.io/github/issues/zmicro-design/plugin-dvm.svg)](https://github.com/zmicro-design/plugin-dvm/issues)
 
 
