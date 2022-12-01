@@ -3,7 +3,7 @@
 # dvm::install install deno version
 dvm::install() {
   vm::ensure
-  
+
   # 1. get version (vm::version_parse only use in install)
   local version=$(vm::version_parse $1)
   # 2. get download url
@@ -69,7 +69,7 @@ dvm::internal_install_download() {
 
   # 302 redirect
   echo "Downloading $tar_gz_url"
-  curl -I $tar_gz_url 2>/dev/null | head -n 1 | grep "302" >> /dev/null 2>&1
+  curl -I $tar_gz_url 2>/dev/null | head -n 1 | grep "302" >>/dev/null 2>&1
   if [ "$?" = "0" ]; then
     local location=$(curl -I $tar_gz_url 2>/dev/null | grep location | awk '{print $2}')
 
@@ -78,7 +78,7 @@ dvm::internal_install_download() {
     location=$(echo $location | sed 's/\r//g')
 
     # 404
-    curl -I $location 2>/dev/null | head -n 1 | grep "404" >> /dev/null 2>&1
+    curl -I $location 2>/dev/null | head -n 1 | grep "404" >>/dev/null 2>&1
     if [ "$?" = "0" ]; then
       log::error "[dvm::install] invalid version: v$version (1)"
       log::error "[dvm::install] see more version at $PLUGIN_DVM_DENO_SOURCE_OFFICIAL"
@@ -86,7 +86,7 @@ dvm::internal_install_download() {
     fi
   else
     # 404
-    curl -I $tar_gz_url 2>/dev/null | head -n 1 | grep "404" >> /dev/null 2>&1
+    curl -I $tar_gz_url 2>/dev/null | head -n 1 | grep "404" >>/dev/null 2>&1
     if [ "$?" = "0" ]; then
       log::error "[dvm::install] invalid version: v$version (2)"
       log::error "[dvm::install] see more version at $PLUGIN_DVM_DENO_SOURCE_OFFICIAL"
@@ -95,7 +95,8 @@ dvm::internal_install_download() {
   fi
 
   # download
-  wget -c $tar_gz_url -O $PLUGIN_DVM_DENO_DOWNLOAD_TMP
+  # wget -c $tar_gz_url -O $PLUGIN_DVM_DENO_DOWNLOAD_TMP
+  os::download $PLUGIN_DVM_DENO_DOWNLOAD_TMP $tar_gz_url
 }
 
 dvm::internal_install_apply_local() {
@@ -118,7 +119,7 @@ dvm::internal_install_apply_local() {
   # create version
   sudo mkdir -p $PLUGIN_DVM_VERSIONS/$version/bin
   # decompress
-  which unzip >> /dev/null 2>&1
+  which unzip >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     pm install -y unzip
   fi
